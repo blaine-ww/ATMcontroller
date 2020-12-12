@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <iomanip>
 #include <climits>
+#include <stdexcept>
 
 using namespace std;
 
@@ -51,10 +52,10 @@ private:
 	int rollingBalance;
 	Bank associatedBank;
 	
-	string getPIN();
-	string getCC();
-	Bank getBank();
-	int getBalance();
+	string getPIN() const;
+	string getCC() const;
+	Bank getBank() const;
+	int getBalance() const;
 	//void connectBank(const Bank& theBank);
 	//void updateBalance(User user, int newBalance);
 	//void connectBank(const Bank& theBank, int newBalance);
@@ -82,17 +83,23 @@ public:
 	void insertPIN();
 	void insertPIN(string num);
 	bool checkPIN(); //isValid
+	//bool checkPIN() throw(logic_error); //isValid
 	void showCC();
+	//void showCC() throw(logic_error);
 	void showPIN();
+	//void showPIN() throw(logic_error);
 
-	int withdraw(int amtWithdraw);
-	int deposit(int amtDeposit);
+	int withdraw(const int amtWithdraw);
+	//int withdraw(int amtWithdraw) throw(logic_error);
+	int deposit(const int amtDeposit);
+	//int deposit(int amtDeposit) throw(logic_error);
 	void logout();
 
 	void printBalance();
+	//void printBalance() throw(logic_error);
 	void printWelcomeMsg();
-	void printDepositMsg();
-	void printWithdrawMsg();
+	void printDepositMsg(const int amtDeposit);
+	void printWithdrawMsg(const int amtWithdraw);
 	void printProcessingMsg();
 	void printSucessMsg();
 	void printLogoutMsg();

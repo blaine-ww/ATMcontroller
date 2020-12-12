@@ -1,17 +1,20 @@
 #include "ATM.h"
-#include "Error.cpp"
+#include "Exceptions.cpp"
+#include "Messages.cpp"
 
-ATM::ATM(){
-	CCnum="";
+
+
+ATM::ATM() : CCnum(""), PIN(""), pinApproved(false), logOut(false), rollingBalance(INT_MIN), associatedBank(Bank(0)), user({{Bank(0)},{0}}){
+	/* CCnum="";
 	PIN="";
 	pinApproved=false; //logIn
 	logOut=false;
 	rollingBalance=INT_MIN;
 	associatedBank=Bank(0);
-	user={{Bank(0)},{0}};
+	user={{Bank(0)},{0}}; */
 }
 
-ATM::ATM(string cc, string pin) : CCnum(cc), PIN(pin), pinApproved(false), rollingBalance(0), associatedBank(Bank(0)){
+ATM::ATM(string cc, string pin) : CCnum(cc), PIN(pin), pinApproved(false), logOut(false), rollingBalance(0), associatedBank(Bank(0)), user({{Bank(0)},{0}}){
 }
 
 ATM::~ATM(){
@@ -22,23 +25,23 @@ ATM::~ATM(){
 
 
 
-string ATM::getCC(void){
+string ATM::getCC(void) const{
 	return CCnum;
 }
 
 
-string ATM::getPIN(void){
+string ATM::getPIN(void) const{
 	return PIN;
 }
 
-int ATM::getBalance(void){
+int ATM::getBalance(void) const{
 
 	return (pinApproved) ? rollingBalance : INT_MIN;
 
 }
 
 
-Bank ATM::getBank(void){
+Bank ATM::getBank(void) const{
 
 	return (pinApproved) ? associatedBank : Bank(0);
 }
@@ -177,13 +180,17 @@ bool ATM::checkPIN(void){
 }
 
 
-int ATM::withdraw(int amtWithdraw){
+int ATM::withdraw(const int amtWithdraw){
 
-	printWithdrawMsg();
+	printWithdrawMsg(amtWithdraw);
 
 	//return remaining acct balance
 	if (!pinApproved) //logOut || 
 		INPUT_ERROR();
+
+	else if (getPIN().empty())
+		BALANCE_ERROR();
+
 	else if ((rollingBalance-amtWithdraw)>0  && amtWithdraw>0){
 		rollingBalance-=amtWithdraw;
 		printProcessingMsg();
@@ -201,12 +208,15 @@ int ATM::withdraw(int amtWithdraw){
 }
 
 
-int ATM::deposit(int amtDeposit){
+int ATM::deposit(const int amtDeposit){
 
-	printDepositMsg();
+	printDepositMsg(amtDeposit);
 
 	if (!pinApproved) //logOut ||
 		INPUT_ERROR();
+
+	else if (getPIN().empty())
+		BALANCE_ERROR();
 
 	else if (amtDeposit>0){
 		//return remaining acct balance
@@ -217,7 +227,9 @@ int ATM::deposit(int amtDeposit){
 		//cout << "This is rollingBalance: " << rollingBalance <<endl;
 	}
 	else  //negative deposit (amtDeposit<0)
-		NEGATIVEINPUT_ERROR();	
+		NEGATIVEINPUT_ERROR();
+		//throw invalid_argument("You have attempted to withdraw/deposit a negative amount. Please input a positive amount.\n");
+		//NEGATIVEINPUT_ERROR());	
 
 	return rollingBalance;
 
@@ -256,66 +268,6 @@ void ATM::showPIN(void){
 		//LOGOUT_ERROR();
 
 }
-
-
-
-
-void ATM::printWelcomeMsg(void){
-	cout << "Welcome to ";
-	switch(associatedBank){
-    case Bank::Bank_A  : cout << "Bank of A.\n";   break;
-    case Bank::Bank_B  : cout << "Bank of B.\n";   break;
-    case Bank::Bank_C  : cout << "Bank of C.\n";   break;
-    case Bank::Bank_D  : cout << "Bank of D.\n";   break;
-    case Bank::Bank_E  : cout << "Bank of E.\n";   break;
-    case Bank::Bank_F  : cout << "Bank of F.\n";   break;
-    case Bank::Bank_G  : cout << "Bank of G.\n";   break;
-    case Bank::Bank_H  : cout << "Bank of H.\n";   break;
-    case Bank::Bank_I  : cout << "Bank of I.\n";   break;
-    default: cout << "This banking card not listed with this ATM. Can withdraw with extra ATM fee.\n";
-	}
-
-}
-
-
-void ATM::printDepositMsg(void){
-	cout << "You are attempting to deposit.\n";
-}
-
-
-void ATM::printWithdrawMsg(void){
-	cout << "You are attempting to withdraw.\n";
-}
-
-
-void ATM::printProcessingMsg(){
-	printf("\t.\n\t.\n\t.\n");
-	
-}
-
-void ATM::printSucessMsg(){
-	cout << "     SUCCESS\n";
-}
-
-void ATM::printLogoutMsg(void){
-
-	cout << "You have logged out. Have a nice day. :]\n\n\n";
-}
-
-
-void ATM::printBalance(void){
-
-	//cout << setprecision(2) << fixed;
-
-	if (pinApproved && !logOut)
-		cout << "You have $" << getBalance() << ".00 remaining in your account.\n\n"; 
-	//else if (!pinApproved)
-	//	LOGOUT_ERROR();
-	else 
-		BALANCE_ERROR();
-		
-}
-
 
 
 
