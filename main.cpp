@@ -1,33 +1,4 @@
-/* Implement a simple ATM controller
 
-Write code for a simple ATM. It doesn't need any UI (either graphical or console), but a controller should be implemented and tested.
-
-Requirements
-At least the following flow should be implemented:
-
-Insert Card => PIN number => Select Account => See Balance/Deposit/Withdraw
-
-
-For simplification, there are only 1 dollar bills in this world, no cents. Thus account balance can be represented in integer.
-
-Your code doesn't need to integrate with a real bank system, but keep in mind that we may want to integrate it with a real bank system in the future. It doesn't have to integrate with a real cash bin in the ATM, but keep in mind that we'd want to integrate with that in the future. And even if we integrate it with them, we'd like to test our code. Implementing bank integration and ATM hardware like cash bin and card reader is not a scope of this task, but testing the controller part (not including bank system, cash bin etc) is within the scope.
-
-A bank API wouldn't give the ATM the PIN number, but it can tell you if the PIN number is correct or not.
-
-
-
-Based on your work, another engineer should be able to implement the user interface. You don't need to implement any REST API, RPC, network communication etc, but just functions/classes/methods, etc.
-
-
-
-You can simplify some complex real world problems if you think it's not worth illustrating in the project.
-
-
-
-How to submit
-Please upload the code for this project to GitHub or anywhere, and post a link to your repository below. Please attach the instruction to clone your project, build and run tests in README.md file in the root directory of the repository.
-
-*/
 
 #include "ATM.cpp"
 
@@ -62,6 +33,7 @@ int main(){
 
 	A.logout();
 
+	
 	//Attempting to access card number;
 	A.showCC(); A.showPIN(); 
 	//delete A;
@@ -104,7 +76,17 @@ int main(){
 
 	C.deposit(100); C.printBalance();
 
-	C.withdraw(-999); C.printBalance();
+	//C.withdraw("ab");
+	/*try {
+		C.withdraw('ab'); 
+	}
+
+	catch (invalid_argument& e){
+		cerr << e.what() << endl;
+		return -1;
+	}*/
+
+	C.printBalance();
 
 	C.deposit(-1); C.printBalance();
 
@@ -112,7 +94,41 @@ int main(){
 
 
 
-	cout << "ATM Done\n";
+	ATM* D = new ATM(); //ATM A;
+
+	printf("\nThis is preliminary transaction for user D.\n");
+
+	D->insertCC("2943167043907098"); 
+	//A.insertCC(""); //To insert via console, can also directly input in main.cpp
+	D->showCC();
+
+	D->insertPIN("9876"); 
+	//A.insertPIN("");//To insert via console
+	D->showPIN();
+
+	D->checkPIN();
+
+	D->printBalance();
+
+	//cout << "You are withdrawing.\n";
+
+	D->deposit(11000); D->printBalance();
+
+	//cout << "You are depositing.\n";
+
+	D->withdraw(2000); D->printBalance();
+
+	//D->logout();
+
+	delete D; cout <<"Deleted user D\n";
+	
+	//Attempting to access card number;
+	D->showCC(); D->showPIN(); 
+	
+	D->printBalance(); D->withdraw(100); D->deposit(70);
+
+
+	cout << "\n\nATM Done\n";
 
 
 }
