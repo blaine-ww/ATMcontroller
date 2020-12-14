@@ -153,7 +153,8 @@ All examples below can be found in @file _main.cpp_
 	
 	Store returned API data into user members and ATM members
 	```
-	int b = CCnum[0]-'0';		// Taking the first digit of user input card number to assign associated Bank```
+	int b = CCnum[0]-'0';		// Taking the first digit of user input card number to assign associated Bank
+	```
 
     __Note this is artificial data, that would otherwise be produced via API call__
     ```
