@@ -401,7 +401,8 @@ All examples below can be found in @file _main.cpp_
 	Directly input card number in main.cpp
 	```
 	D->insertCC("2943167043907098");  //D->insertCC(""); To insert via console, can also directly input in main.cpp
-	D->showCC(); ```
+	D->showCC(); 
+	```
 	
 	Directly input PIN passcode in main.cpp
 	```
